@@ -1,0 +1,26 @@
+import {Types, Model} from 'mongoose';
+import {Point} from 'geojson';
+
+type Category = {
+  category_name: string;
+};
+
+type Species = {
+  species_name: string;
+  category: Types.ObjectId | Category; // Reference to Category
+  location: Point;
+  image: string;
+};
+
+type Animal = {
+  animal_name: string;
+  birthdate: Date;
+  species: Types.ObjectId | Species; // Reference to Species
+  location: Point;
+};
+
+type AnimalModel = Model<Animal> & {
+  findBySpecies: (species: string) => Promise<Animal[]>;
+};
+
+export {Category, Species, Animal, AnimalModel};
