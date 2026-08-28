@@ -1,5 +1,5 @@
 import {Types, Model} from 'mongoose';
-import {Point} from 'geojson';
+import {Point, Polygon} from 'geojson';
 
 type Category = {
   category_name: string;
@@ -7,7 +7,7 @@ type Category = {
 
 type Species = {
   species_name: string;
-  category: Types.ObjectId | Category; // Reference to Category
+  category: Types.ObjectId | Category;
   location: Point;
   image: string;
 };
@@ -15,12 +15,16 @@ type Species = {
 type Animal = {
   animal_name: string;
   birthdate: Date;
-  species: Types.ObjectId | Species; // Reference to Species
+  species: Types.ObjectId | Species;
   location: Point;
 };
 
 type AnimalModel = Model<Animal> & {
-  findBySpecies: (species: string) => Promise<Animal[]>;
+  findBySpecies: (species_name: string) => Promise<Animal[]>;
 };
 
-export {Category, Species, Animal, AnimalModel};
+type SpeciesModel = Model<Species> & {
+  findByArea: (polygon: Polygon) => Promise<Species[]>;
+};
+
+export {Category, Species, Animal, AnimalModel, SpeciesModel};
